@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Fácil - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <script>
+        // Verificar autenticación
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <div class="container">
+        <header>
+            <h1>🏪 Control Fácil</h1>
+            <p class="subtitle">Sistema de Gestión de Inventario para Cantinas</p>
+            <button id="logout-btn" class="btn-logout" title="Cerrar Sesión">🚪 Salir</button>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="entradas">📦 Entradas</button>
+            <button class="tab-btn" data-tab="salidas">📤 Salidas</button>
+            <button class="tab-btn" data-tab="inventario">📊 Inventario</button>
+            <button class="tab-btn" data-tab="vencimientos">⚠️ Vencimientos</button>
+        </nav>
+
+        <!-- SECCIÓN DE ENTRADAS -->
+        <section id="entradas" class="tab-content active">
+            <h2>Registro de Entradas de Producto</h2>
+            <div class="form-card">
+                <form id="form-entrada">
+                    <div class="form-group">
+                        <label for="entrada-producto">Nombre del Producto *</label>
+                        <input type="text" id="entrada-producto" placeholder="Ej: Harina P.A.N, Refrescos Glup" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="entrada-cantidad">Cantidad *</label>
+                            <input type="number" id="entrada-cantidad" min="1" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="entrada-unidad">Unidad</label>
+                            <select id="entrada-unidad">
+                                <option value="unidades">Unidades</option>
+                                <option value="kg">Kilogramos</option>
+                                <option value="litros">Litros</option>
+                                <option value="cajas">Cajas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entrada-lote">Número de Lote/Partida *</label>
+                        <input type="text" id="entrada-lote" placeholder="Ej: LOTE-2024-001" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="entrada-proveedor">Proveedor *</label>
+                            <input type="text" id="entrada-proveedor" placeholder="Nombre del proveedor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="entrada-fecha">Fecha de Llegada *</label>
+                            <input type="date" id="entrada-fecha" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entrada-vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="entrada-vencimiento">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">✓ Registrar Entrada</button>
+                </form>
+            </div>
+
+            <div class="recent-entries">
+                <h3>Últimas Entradas Registradas</h3>
+                <div id="lista-entradas" class="entries-list"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE SALIDAS -->
+        <section id="salidas" class="tab-content">
+            <h2>Registro de Salidas de Producto</h2>
+            <div class="form-card">
+                <form id="form-salida">
+                    <div class="form-group">
+                        <label for="salida-producto">Seleccionar Producto *</label>
+                        <select id="salida-producto" required>
+                            <option value="">-- Seleccione un producto --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salida-lote">Seleccionar Lote *</label>
+                        <select id="salida-lote" required disabled>
+                            <option value="">-- Primero seleccione un producto --</option>
+                        </select>
+                    </div>
+
+                    <div class="stock-info" id="stock-info" style="display: none;">
+                        <p><strong>Stock Disponible:</strong> <span id="stock-disponible">0</span> <span id="stock-unidad"></span></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salida-cantidad">Cantidad a Retirar *</label>
+                        <input type="number" id="salida-cantidad" min="1" placeholder="0" required disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salida-motivo">Motivo de Salida</label>
+                        <select id="salida-motivo">
+                            <option value="venta">Venta</option>
+                            <option value="consumo">Consumo Interno</option>
+                            <option value="merma">Merma/Pérdida</option>
+                            <option value="devolucion">Devolución</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">✓ Registrar Salida</button>
+                </form>
+            </div>
+
+            <div class="recent-entries">
+                <h3>Últimas Salidas Registradas</h3>
+                <div id="lista-salidas" class="entries-list"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE INVENTARIO -->
+        <section id="inventario" class="tab-content">
+            <h2>Inventario Actual</h2>
+            <div class="inventory-summary">
+                <div class="summary-card">
+                    <h3>Total Productos</h3>
+                    <p class="summary-number" id="total-productos">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Lotes</h3>
+                    <p class="summary-number" id="total-lotes">0</p>
+                </div>
+                <div class="summary-card alert">
+                    <h3>Productos Bajos</h3>
+                    <p class="summary-number" id="productos-bajos">0</p>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="buscar-inventario" placeholder="🔍 Buscar producto...">
+            </div>
+
+            <div class="inventory-table">
+                <table id="tabla-inventario">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Lote</th>
+                            <th>Stock</th>
+                            <th>Proveedor</th>
+                            <th>Fecha Entrada</th>
+                            <th>Vencimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-inventario">
+                        <tr>
+                            <td colspan="6" class="empty-state">No hay productos en el inventario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE VENCIMIENTOS -->
+        <section id="vencimientos" class="tab-content">
+            <h2>Control de Vencimientos</h2>
+            <div class="alert-info">
+                <p>⚠️ Productos próximos a vencer o vencidos</p>
+            </div>
+
+            <div class="vencimientos-container">
+                <div class="vencimientos-card vencidos">
+                    <h3>🔴 Vencidos</h3>
+                    <div id="lista-vencidos" class="vencimientos-list"></div>
+                </div>
+
+                <div class="vencimientos-card proximos">
+                    <h3>🟡 Próximos a Vencer (30 días)</h3>
+                    <div id="lista-proximos" class="vencimientos-list"></div>
+                </div>
+
+                <div class="vencimientos-card buenos">
+                    <h3>🟢 En Buen Estado</h3>
+                    <div id="lista-buenos" class="vencimientos-list"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

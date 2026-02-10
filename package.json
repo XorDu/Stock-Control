@@ -1,0 +1,23 @@
+{
+  "name": "control-facil",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión de Inventario para Cantinas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "init-db": "node init-db.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "mysql2": "^3.16.3"
+  },
+  "keywords": [
+    "inventario",
+    "gestion",
+    "cantina"
+  ],
+  "author": "",
+  "license": "ISC"
+}
