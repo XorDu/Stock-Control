@@ -195,8 +195,7 @@ DB_NAME=control_facil
 
 Para más información, consultar:
 - [Guía de Instalación Detallada](docs/README_instalation.md)
-- [Documentación de Base de Datos](docs/basededatosrelacional.txt)
-- [Solución de Lotes](docs/SOLUCION_LOTES.md)
+
 
 ## 🐛 Solución de Problemas
 
