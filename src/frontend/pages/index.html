@@ -4,7 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Fácil - Sistema de Gestión de Inventario</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    
+<!-- jsPDF para generación de PDFs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-pdf-small {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-pdf-small:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+    </style>
 </head>
 <body>
     <script>
@@ -24,7 +55,9 @@
             <button class="tab-btn active" data-tab="entradas">📦 Entradas</button>
             <button class="tab-btn" data-tab="salidas">📤 Salidas</button>
             <button class="tab-btn" data-tab="inventario">📊 Inventario</button>
+            <button class="tab-btn" data-tab="lotes">📋 Lotes</button>
             <button class="tab-btn" data-tab="vencimientos">⚠️ Vencimientos</button>
+            <button class="tab-btn" data-tab="reporte">📈 Reporte</button>
         </nav>
 
         <!-- SECCIÓN DE ENTRADAS -->
@@ -159,20 +192,60 @@
                     <thead>
                         <tr>
                             <th>Producto</th>
-                            <th>Lote</th>
-                            <th>Stock</th>
-                            <th>Proveedor</th>
-                            <th>Fecha Entrada</th>
-                            <th>Vencimiento</th>
+                            <th>Stock Total</th>
+                            <th>Lotes</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-inventario">
                         <tr>
-                            <td colspan="6" class="empty-state">No hay productos en el inventario</td>
+                            <td colspan="4" class="empty-state">No hay productos en el inventario</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE LOTES -->
+        <section id="lotes" class="tab-content">
+            <h2>Gestión de Lotes</h2>
+            <div id="lotes-producto-header" style="display: none;">
+                <button class="btn btn-secondary" onclick="volverAListaLotes()">← Volver a todos los productos</button>
+                <h3 id="lotes-producto-nombre"></h3>
+            </div>
+            <div class="inventory-table" id="tabla-lotes-producto" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>Proveedor</th>
+                            <th>Stock del Lote</th>
+                            <th>Fecha Vencimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-lotes-producto"></tbody>
+                </table>
+            </div>
+            <div id="todos-lotes-container">
+                <div class="search-bar">
+                    <input type="text" id="buscar-lotes" placeholder="🔍 Buscar por producto o lote...">
+                </div>
+                <div class="inventory-table">
+                    <table id="tabla-todos-lotes">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Lote</th>
+                                <th>Proveedor</th>
+                                <th>Stock</th>
+                                <th>Vencimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-todos-lotes"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -180,7 +253,7 @@
         <section id="vencimientos" class="tab-content">
             <h2>Control de Vencimientos</h2>
             <div class="alert-info">
-                <p>⚠️ Productos próximos a vencer o vencidos</p>
+                <p>⚠️ Lotes vencidos o próximos a vencer</p>
             </div>
 
             <div class="vencimientos-container">
@@ -193,10 +266,21 @@
                     <h3>🟡 Próximos a Vencer (30 días)</h3>
                     <div id="lista-proximos" class="vencimientos-list"></div>
                 </div>
+            </div>
+        </section>
 
-                <div class="vencimientos-card buenos">
-                    <h3>🟢 En Buen Estado</h3>
-                    <div id="lista-buenos" class="vencimientos-list"></div>
+        <!-- SECCIÓN DE REPORTE -->
+        <section id="reporte" class="tab-content">
+            <h2>Reporte de Ventas</h2>
+            <p class="subtitle">Top de productos más vendidos</p>
+            
+            <div class="report-controls">
+                <button id="btn-descargar-pdf" class="btn btn-primary">📄 Descargar PDF</button>
+            </div>
+
+            <div class="report-container">
+                <div id="reporte-top" class="report-table">
+                    <div class="empty-state">Cargando datos...</div>
                 </div>
             </div>
         </section>
@@ -204,6 +288,7 @@
 
     <div id="notification" class="notification"></div>
 
-    <script src="app.js"></script>
+    <script src="../assets/js/api.service.js"></script>
+    <script src="../assets/js/app.js"></script>
 </body>
 </html>

@@ -178,6 +178,20 @@ select:disabled {
     cursor: not-allowed;
 }
 
+/* INPUT ERROR STATE */
+input.input-error,
+select.input-error {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
 /* BUTTONS */
 .btn {
     padding: 14px 30px;
@@ -507,6 +521,12 @@ tbody tr:hover {
 .notification.warning {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
 
 /* DELETE BUTTONS */
 .btn-delete {
@@ -561,6 +581,44 @@ tbody tr:hover {
     .tab-content {
         padding: 20px;
     }
+.btn-pdf-small {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-delete-small {
+    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-small:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(235, 51, 73, 0.4);
+}
+
+.btn-pdf-small:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+}
 
     .form-row {
         grid-template-columns: 1fr;
@@ -590,4 +648,162 @@ tbody tr:hover {
     th, td {
         padding: 10px;
     }
+}
+
+/* REPORTE SECTION */
+.report-controls {
+    margin-bottom: 25px;
+}
+
+.report-container {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.report-table {
+    overflow-x: auto;
+}
+
+.report-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.report-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.report-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.report-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(255, 183, 0, 0.4);
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(168, 168, 168, 0.4);
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #b8722b 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(184, 114, 43, 0.4);
+}
+
+.rank-other {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.product-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.sales-count {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* ESTILOS PARA LOTES */
+.btn-lotes {
+    background: linear-gradient(135deg, #00c853 0%, #009624 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-lotes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.lotes-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #00c853 0%, #009624 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.lotes-badge-none {
+    display: inline-block;
+    background: #e9ecef;
+    color: #6c757d;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+#lotes-producto-header {
+    margin-bottom: 20px;
+}
+
+#lotes-producto-header h3 {
+    margin-top: 15px;
+    color: #495057;
+    font-size: 1.2em;
+}
+
+#lotes-producto-header .btn-secondary {
+    margin-bottom: 10px;
+}
+
+#todos-lotes-container {
+    margin-top: 20px;
 }

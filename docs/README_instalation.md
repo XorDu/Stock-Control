@@ -55,7 +55,7 @@ control-facil/
 
 ### Paso 2: Inicializar Base de Datos
 
-Ejecuta el script de初始化ización:
+Ejecuta el script de instalacion en el cmd:
 ```bash
 npm run init-db
 ```
@@ -119,11 +119,11 @@ El sistema requiere autenticación para acceder al panel:
 
 ### Control de Vencimientos
 
-1. Ve a la pestaña **"⚠️ Vencimientos"**
+1. Ve a la pestaña **" Vencimientos"**
 2. Verás tres categorías:
-   - 🔴 **Vencidos**: Productos que ya pasaron su fecha de vencimiento
-   - 🟡 **Próximos a Vencer**: Productos que vencen en los próximos 30 días
-   - 🟢 **En Buen Estado**: Productos con vencimiento lejano o sin fecha
+   - **Vencidos**: Productos que ya pasaron su fecha de vencimiento
+   - **Próximos a Vencer**: Productos que vencen en los próximos 30 días
+   - **En Buen Estado**: Productos con vencimiento lejano o sin fecha
 
 ## 🔧 API REST
 
@@ -171,14 +171,14 @@ curl -X POST http://localhost:3000/api/entradas \
   -d '{"producto":"Harina P.A.N","cantidad":50,"unidad":"kg","lote":"LOTE-001","proveedor":"Distribuidora","fecha":"2024-01-15"}'
 ```
 
-## 💾 Almacenamiento de Datos
+##  Almacenamiento de Datos
 
 - **Base de datos**: MySQL (XAMPP)
 - **Tablas**: `productos`, `entradas`, `salidas`
 - **Persistencia**: Los datos surviven reinicios del servidor
 - **Acceso**: Múltiples usuarios pueden acceder simultáneamente
 
-## 🔧 Requisitos Técnicos
+##  Requisitos Técnicos
 
 - **Node.js**: Versión 14 o superior
 - **MySQL**: Versión 5.7 o superior (incluido en XAMPP)
@@ -186,14 +186,14 @@ curl -X POST http://localhost:3000/api/entradas \
 - **RAM**: Mínimo 512MB
 - **Espacio**: Mínimo 50MB
 
-## ⚠️ Advertencias Importantes
+##  Advertencias Importantes
 
 1. **XAMPP Running**: Asegúrate de que Apache/MySQL esté ejecutándose
 2. **Respaldo**: Haz respaldos periódicos de tu base de datos MySQL
 3. **Puerto 3306**: Verifica que MySQL use el puerto correcto
 4. **Credenciales**: Usa usuario `root` sin contraseña para desarrollo local
 
-## 🆘 Solución de Problemas
+##  Solución de Problemas
 
 ### Error de conexión a MySQL
 - Verifica que XAMPP/MySQL esté ejecutándose

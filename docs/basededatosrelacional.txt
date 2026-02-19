@@ -1,0 +1,267 @@
+================================================================================
+              DOCUMENTACIÓN: BASE DE DATOS RELACIONAL CONTROL FÁCIL
+================================================================================
+
+PROBLEMA ORIGINAL:
+------------------
+La base de datos anterior permitía duplicar valores en la tabla de entradas.
+Por ejemplo, se podían registrar dos entradas idénticas:
+
+  Producto: mary, Lote: lote01 (Primera vez)    → ✓ Registrado
+  Producto: mary, Lote: lote01 (Segunda vez)    → ✓ Registrado (¡ERROR!)
+
+Esto ocurría porque el campo "lote" era solo un VARCHAR sin restricción única.
+
+
+SOLUCIÓN IMPLEMENTADA:
+----------------------
+Se creó una estructura relacional completa con Foreign Keys y restricciones UNIQUE
+para garantizar la integridad de los datos.
+
+
+================================================================================
+                         ESTRUCTURA DE LA BASE DE DATOS
+================================================================================
+
+TABLA: productos
+----------------
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- nombre (VARCHAR 200, NOT NULL)
+- stock (INT, DEFAULT 0)
+- unidad (VARCHAR 50, DEFAULT 'unidades')
+- fecha_vencimiento (DATE)
+- created_at (TIMESTAMP)
+
+TABLA: lotes (NUEVA - Clave para evitar duplicados)
+----------------------------------------------------
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- producto_id (INT, NOT NULL, FOREIGN KEY → productos.id)
+- numero_lote (VARCHAR 100, NOT NULL)
+- proveedor (VARCHAR 200)
+- fecha_vencimiento (DATE)
+- created_at (TIMESTAMP)
+
+*** RESTRICCIÓN CLAVE ***
+  UNIQUE KEY unique_producto_lote (producto_id, numero_lote)
+
+  Esta restricción COMPUESTA garantiza que NO se puede repetir el mismo número
+  de lote para el mismo producto. Es decir:
+    - "mary" con "lote01" → ✓ Permitido
+    - "mary" con "lote01" → ✗ BLOQUEADO (Error de duplicado)
+
+TABLA: entradas (MODIFICADA)
+----------------------------
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- producto_id (INT, NOT NULL, FOREIGN KEY → productos.id)
+- lote_id (INT, NOT NULL, FOREIGN KEY → lotes.id)  [NUEVO]
+- cantidad (INT, NOT NULL)
+- unidad (VARCHAR 50)
+- fecha (DATE)
+- created_at (TIMESTAMP)
+
+TABLA: salidas
+--------------
+- id (INT, PRIMARY KEY, AUTO_INCREMENT)
+- producto_id (INT, NOT NULL, FOREIGN KEY → productos.id)
+- cantidad (INT, NOT NULL)
+- motivo (VARCHAR 100)
+- created_at (TIMESTAMP)
+
+TABLA: usuarios
+---------------
+- id (INT, PRIMARY KEY)
+- rol (VARCHAR 50, NOT NULL)
+- nombre_de_usuario (VARCHAR 100, NOT NULL, UNIQUE)
+- clave (VARCHAR 255, NOT NULL)
+
+
+================================================================================
+                              RELACIONES (FOREIGN KEYS)
+================================================================================
+
+Las relaciones se pueden visualizar en phpMyAdmin:
+http://localhost/phpmyadmin/index.php?route=/database/designer&db=control_facil
+
+DIAGRAMA DE RELACIONES:
+------------------------
+
+    +-------------+         +-------------+         +-------------+
+    |  productos  |         |    lotes    |         |   entradas  |
+    +-------------+         +-------------+         +-------------+
+    | id (PK)     |<------  | producto_id |         | id (PK)     |
+    | nombre      |   FK    | numero_lote |         | producto_id |----> productos
+    | stock       |   UNIQUE| proveedor   |         | lote_id     |----> lotes
+    | unidad      |         | vencimiento |         | cantidad    |
+    | ...         |         | ...         |         | fecha       |
+    +-------------+         +-------------+         +-------------+
+
+    +-------------+
+    |   salidas   |
+    +-------------+
+    | id (PK)     |
+    | producto_id |----> productos
+    | cantidad    |
+    | motivo      |
+    +-------------+
+
+DETALLE DE FOREIGN KEYS:
+------------------------
+1. lotes.producto_id → productos.id (ON DELETE CASCADE)
+   - Si se elimina un producto, se eliminan sus lotes automáticamente
+
+2. entradas.producto_id → productos.id (ON DELETE CASCADE)
+   - Si se elimina un producto, se eliminan sus entradas automáticamente
+
+3. entradas.lote_id → lotes.id (ON DELETE CASCADE)
+   - Si se elimina un lote, se eliminan sus entradas automáticamente
+
+4. salidas.producto_id → productos.id (ON DELETE CASCADE)
+   - Si se elimina un producto, se eliminan sus salidas automáticamente
+
+
+================================================================================
+                              CÓMO USAR LOS ARCHIVOS
+================================================================================
+
+1. INICIALIZAR LA BASE DE DATOS RELACIONAL:
+   -----------------------------------------
+   Opción A: Usar el script standalone
+   $ node init-db.js
+
+   Opción B: Usar el endpoint del servidor
+   - Iniciar el servidor: $ node server.js
+   - Visitar: http://localhost:3000/api/init-db
+
+2. VER LAS RELACIONES EN PHPMyAdmin:
+   ----------------------------------
+   - Abrir: http://localhost/phpmyadmin
+   - Seleccionar base de datos: control_facil
+   - Clic en pestaña "Diseñador" o "Designer"
+   - Verás el diagrama de relaciones visual
+
+3. PROBAR LA PROTECCIÓN CONTRA DUPLICADOS:
+   ----------------------------------------
+   - Inicia sesión como admin
+   - Registra una entrada: Producto "mary", Lote "lote01"
+   - Intenta registrar otra entrada igual
+   - Deberás ver el error:
+     "El lote 'lote01' ya está registrado para el producto 'mary'"
+
+
+================================================================================
+                         MODIFICACIONES EN EL CÓDIGO
+================================================================================
+
+ARCHIVO: init-db.js
+-------------------
+- Agregada tabla "lotes" con restricción UNIQUE compuesta
+- Agregadas Foreign Keys a todas las tablas
+- Usado ENGINE=InnoDB para soporte completo de Foreign Keys
+- Usado CHARSET=utf8mb4 para mejor soporte de caracteres
+
+ARCHIVO: server.js
+------------------
+Ruta GET /api/entradas:
+- Modificado para JOIN con tabla lotes
+- Ahora devuelve: numero_lote, proveedor, lote_vencimiento
+
+Ruta POST /api/entradas:
+- Nueva lógica para verificar/crear lotes
+- Validación de lote obligatorio
+- Verificación de lote existente antes de insertar
+- Retorna error claro si el lote ya existe
+
+Ruta GET /api/init-db:
+- Actualizada para crear la estructura relacional completa
+
+
+================================================================================
+                             PREGUNTAS FRECUENTES
+================================================================================
+
+P: ¿Puedo seguir usando la base de datos anterior?
+R: No. La nueva estructura es incompatible. Debes ejecutar init-db.js para
+   crear la nueva estructura relacional.
+
+P: ¿Qué pasa si intento duplicar un lote?
+R: El servidor retornará un error 400 con el mensaje:
+   "El lote 'X' ya está registrado para el producto 'Y'"
+
+P: ¿Las relaciones se ven en phpMyAdmin Designer?
+R: Sí. Al crear las Foreign Keys con InnoDB, las relaciones se visualizan
+   automáticamente en el diseñador de phpMyAdmin.
+
+P: ¿Se mantiene toda la funcionalidad anterior?
+R: Sí. Todas las funcionalidades (entradas, salidas, inventario, reportes,
+   usuarios, login) funcionan exactamente igual, solo que ahora con una
+   estructura de datos más robusta y relacional.
+
+
+================================================================================
+                              ESCENARIOS DE USO
+================================================================================
+
+ESCENARIO 1: Registrar primera entrada
+----------------------------------------
+Entrada:
+  - Producto: "Refresco Cola"
+  - Cantidad: 24
+  - Unidad: "unidades"
+  - Lote: "L2024-001"
+  - Proveedor: "Coca-Cola"
+  - Vencimiento: 2025-01-01
+
+Resultado:
+  ✓ Producto "Refresco Cola" creado
+  ✓ Lote "L2024-001" creado
+  ✓ Entrada registrada
+  ✓ Stock actualizado (+24)
+
+ESCENARIO 2: Intentar duplicar lote (MISMO PRODUCTO)
+----------------------------------------------------
+Entrada (igual que anterior):
+  - Producto: "Refresco Cola"
+  - Lote: "L2024-001"
+
+Resultado:
+  ✗ Error: "El lote 'L2024-001' ya está registrado para el producto 'Refresco Cola'"
+
+ESCENARIO 3: Usar mismo lote en producto diferente
+----------------------------------------------------
+Entrada:
+  - Producto: "Agua Natural"  (DIFERENTE producto)
+  - Lote: "L2024-001"       (MISMO número de lote)
+
+Resultado:
+  ✓ Permitido (son productos diferentes)
+  ✓ Se crea nuevo registro en tabla lotes
+  ✓ Entrada registrada
+
+ESCENARIO 4: Eliminar producto con cascade
+------------------------------------------
+Acción: Eliminar producto "Refresco Cola"
+
+Resultado:
+  ✓ Se eliminan automáticamente:
+    - Todos los lotes asociados
+    - Todas las entradas asociadas
+    - Todas las salidas asociadas
+  (Integridad referencial garantizada)
+
+
+================================================================================
+                           INFORMACIÓN TÉCNICA
+================================================================================
+
+Motor de base de datos: MySQL / MariaDB
+Engine de tablas: InnoDB (requerido para Foreign Keys)
+Charset: utf8mb4 (soporte completo de caracteres especiales)
+
+Ventajas de la nueva estructura:
+1. ✓ Sin duplicación de lotes por producto
+2. ✓ Integridad referencial automática
+3. ✓ Consultas optimizadas con JOINs
+4. ✓ Diagrama visual en phpMyAdmin
+5. ✓ Código más mantenible y escalable
+
+================================================================================

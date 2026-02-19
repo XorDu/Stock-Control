@@ -2,11 +2,12 @@
   "name": "control-facil",
   "version": "1.0.0",
   "description": "Sistema de Gestión de Inventario para Cantinas",
-  "main": "server.js",
+  "main": "src/backend/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "init-db": "node init-db.js"
+    "start": "node src/backend/server.js",
+    "dev": "node src/backend/server.js",
+    "init-db": "node src/backend/scripts/init-db.js",
+    "migrate": "node src/backend/scripts/migrate_lote_id.js"
   },
   "dependencies": {
     "dotenv": "^16.6.1",

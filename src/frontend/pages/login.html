@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Fácil - Iniciar Sesión</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         .login-container {
             max-width: 400px;
@@ -109,30 +109,41 @@
     </div>
 
     <script>
-        // Credenciales hardcodeadas
-        const VALID_USER = 'cantina';
-        const VALID_PASS = '1234';
-
         // Verificar si ya está logueado
         if (sessionStorage.getItem('authenticated') === 'true') {
             window.location.href = 'index.html';
         }
 
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const user = document.getElementById('username').value.trim().toLowerCase();
+            const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value;
             const errorEl = document.getElementById('login-error');
 
-            if (user === VALID_USER && pass === VALID_PASS) {
-                // Login exitoso
-                sessionStorage.setItem('authenticated', 'true');
-                window.location.href = 'index.html';
-            } else {
-                // Login fallido
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Login exitoso
+                    sessionStorage.setItem('authenticated', 'true');
+                    sessionStorage.setItem('userRol', result.user.rol);
+                    sessionStorage.setItem('userName', result.user.nombre_de_usuario);
+                    window.location.href = 'index.html';
+                } else {
+                    // Login fallido
+                    errorEl.style.display = 'block';
+                    document.getElementById('password').value = '';
+                }
+            } catch (error) {
+                errorEl.textContent = 'Error de conexión';
                 errorEl.style.display = 'block';
-                document.getElementById('password').value = '';
             }
         });
     </script>
