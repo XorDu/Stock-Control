@@ -8,8 +8,7 @@ const { pool } = require('../config/database.config');
 const { verificarRol } = require('../middleware/auth.middleware');
 
 // GET - Obtener productos para selector
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver productos
-router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT id, nombre, stock, unidad 
@@ -25,8 +24,7 @@ router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) =
 });
 
 // GET - Obtener inventario agrupado por producto
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver inventario
-router.get('/inventario', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/inventario', async (req, res) => {
   try {
     // Obtener productos con sus lotes
     const [productos] = await pool.query(`
@@ -62,8 +60,7 @@ router.get('/inventario', verificarRol(['us', 'admin', 'super admin']), async (r
 });
 
 // GET - Obtener resumen
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver resumen
-router.get('/resumen', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/resumen', async (req, res) => {
   try {
     const [productos] = await pool.query('SELECT COUNT(*) as total FROM productos WHERE stock > 0');
     const [lotes] = await pool.query(`

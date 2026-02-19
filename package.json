@@ -10,6 +10,7 @@
     "migrate": "node src/backend/scripts/migrate_lote_id.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
     "mysql2": "^3.16.3"

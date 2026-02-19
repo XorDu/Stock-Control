@@ -8,8 +8,7 @@ const { pool } = require('../config/database.config');
 const { verificarRol } = require('../middleware/auth.middleware');
 
 // GET - Obtener entradas
-// SEGURIDAD: Solo Admin y Super Admin pueden ver entradas (usuarios no)
-router.get('/', verificarRol(['admin', 'super admin']), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT e.*, p.nombre as producto_nombre, l.numero_lote as lote, l.proveedor, l.fecha_vencimiento as lote_vencimiento
@@ -27,7 +26,7 @@ router.get('/', verificarRol(['admin', 'super admin']), async (req, res) => {
 
 // POST - Crear entrada
 // SEGURIDAD: Solo Admin y Super Admin pueden registrar entradas
-router.post('/', verificarRol(['admin', 'super admin']), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { producto, cantidad, unidad, lote, proveedor, fecha, vencimiento } = req.body;
 

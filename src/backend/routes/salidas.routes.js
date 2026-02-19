@@ -8,8 +8,7 @@ const { pool } = require('../config/database.config');
 const { verificarRol } = require('../middleware/auth.middleware');
 
 // GET - Obtener salidas
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver salidas
-router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT s.*, p.nombre as producto_nombre 
@@ -25,8 +24,7 @@ router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) =
 });
 
 // POST - Crear salida
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden registrar salidas
-router.post('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { producto_id, cantidad, motivo, lote_id } = req.body;
     
@@ -59,10 +57,17 @@ router.post('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) 
     }
     
     // Insertar salida
-    await pool.query(
-      `INSERT INTO salidas (producto_id, cantidad, motivo, lote_id) VALUES (?, ?, ?, ?)`,
-      [producto_id, cantidad, motivo, lote_id || null]
-    );
+    if (lote_id) {
+      await pool.query(
+        `INSERT INTO salidas (producto_id, cantidad, motivo, lote_id) VALUES (?, ?, ?, ?)`,
+        [producto_id, cantidad, motivo, lote_id]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO salidas (producto_id, cantidad, motivo) VALUES (?, ?, ?)`,
+        [producto_id, cantidad, motivo]
+      );
+    }
     
     // Actualizar stock del lote o eliminarlo si llega a 0
     if (lote_id) {

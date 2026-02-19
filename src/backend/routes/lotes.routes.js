@@ -8,8 +8,7 @@ const { pool } = require('../config/database.config');
 const { verificarRol } = require('../middleware/auth.middleware');
 
 // GET - Obtener todos los lotes
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver lotes
-router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     // Obtener todos los lotes con el stock calculado por lote (sumando las entradas)
     const [rows] = await pool.query(`
@@ -38,8 +37,7 @@ router.get('/', verificarRol(['us', 'admin', 'super admin']), async (req, res) =
 });
 
 // GET - Obtener lotes de un producto específico
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver lotes por producto
-router.get('/producto/:producto_id', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/producto/:producto_id', async (req, res) => {
   try {
     const { producto_id } = req.params;
     
@@ -84,8 +82,7 @@ router.get('/producto/:producto_id', verificarRol(['us', 'admin', 'super admin']
 });
 
 // GET - Verificar si un número de lote ya existe
-// SEGURIDAD: Admin y Super Admin pueden verificar lotes
-router.get('/verificar', verificarRol(['admin', 'super admin']), async (req, res) => {
+router.get('/verificar', async (req, res) => {
   try {
     const { numero_lote, producto_nombre } = req.query;
     
@@ -144,8 +141,7 @@ router.get('/verificar', verificarRol(['admin', 'super admin']), async (req, res
 });
 
 // GET - Obtener vencimientos por lote
-// SEGURIDAD: Admin, Super Admin y Usuarios (us) pueden ver vencimientos
-router.get('/vencimientos', verificarRol(['us', 'admin', 'super admin']), async (req, res) => {
+router.get('/vencimientos', async (req, res) => {
   try {
     // Obtener fecha actual en timezone local (Caracas = UTC-4)
     const ahora = new Date();

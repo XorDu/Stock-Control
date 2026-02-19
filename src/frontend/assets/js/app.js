@@ -562,7 +562,7 @@ async function renderizarSalidas() {
 
 async function renderizarInventario(filtro = '') {
     const tbody = document.getElementById('tbody-inventario');
-    const resultado = await apiGet('/api/inventario');
+    const resultado = await apiGet('/api/productos/inventario');
     
     let items = resultado.data || [];
     
@@ -749,7 +749,7 @@ function imprimirPDFLote(loteId) {
 // ============================================
 
 async function renderizarVencimientos() {
-    const resultado = await apiGet('/api/vencimientos');
+    const resultado = await apiGet('/api/lotes/vencimientos');
     
     if (!resultado.success) {
         document.getElementById('lista-vencidos').innerHTML = '<div class="empty-message">Error cargando datos</div>';
@@ -1170,7 +1170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function imprimirPDFProducto(productoId) {
     try {
         // Obtener datos del producto
-        const resultado = await apiGet(`/api/inventario`);
+        const resultado = await apiGet(`/api/productos/inventario`);
         const items = resultado.data || [];
         const producto = items.find(item => item.id === productoId);
         
