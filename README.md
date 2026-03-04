@@ -1,6 +1,6 @@
 <div align="center">
 
-# ðŸ“¦ Stock Control
+# 📦 Stock Control
 
 ### Inventory Management System for Canteens
 
@@ -13,19 +13,19 @@
 
 ---
 
-## ðŸ“‹ About
+## 📋 About
 
 **Stock Control** is a full-featured inventory management system designed for canteens and small businesses. Built with a Node.js/Express backend and MySQL database, it provides an intuitive interface to manage products, track inventory levels, and handle stock operations efficiently.
 
-## âœ¨ Features
+## ✨ Features
 
-- ðŸ“Š **Real-time inventory tracking** â€” Monitor stock levels at a glance
-- âž• **CRUD operations** â€” Create, read, update, and delete products
-- ðŸ”„ **Batch management** â€” Track product lots and batches
-- ðŸ“ˆ **Reports** â€” Generate inventory reports
-- ðŸ” **Secure** â€” Environment-based configuration with dotenv
+- 📊 **Real-time inventory tracking** — Monitor stock levels at a glance
+- ➕ **CRUD operations** — Create, read, update, and delete products
+- 🔄 **Batch management** — Track product lots and batches
+- 📈 **Reports** — Generate inventory reports
+- 🔐 **Secure** — Environment-based configuration with dotenv
 
-## ðŸ› ï¸ Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -34,7 +34,7 @@
 | **Auth** | dotenv for config |
 | **API** | RESTful API with CORS support |
 
-## ðŸš€ Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v14+)
@@ -68,31 +68,31 @@ DB_NAME=stock_control
 PORT=3000
 ```
 
-## ðŸ“ Project Structure
+## 📁 Project Structure
 
 ```
 Stock-Control/
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ backend/
-â”‚   â”‚   â”œâ”€â”€ server.js          # Express server entry point
-â”‚   â”‚   â””â”€â”€ scripts/
-â”‚   â”‚       â”œâ”€â”€ init-db.js     # Database initialization
-â”‚   â”‚       â””â”€â”€ migrate_lote_id.js  # Migration scripts
-â”œâ”€â”€ docs/                      # Documentation
-â”œâ”€â”€ package.json
-â””â”€â”€ .gitignore
+├── src/
+│   ├── backend/
+│   │   ├── server.js          # Express server entry point
+│   │   └── scripts/
+│   │       ├── init-db.js     # Database initialization
+│   │       └── migrate_lote_id.js  # Migration scripts
+├── docs/                      # Documentation
+├── package.json
+└── .gitignore
 ```
 
-## ðŸ¤ Contributing
+## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/XorDu/Stock-Control/issues).
 
-## ðŸ“„ License
+## 📄 License
 
 This project is [ISC](https://opensource.org/licenses/ISC) licensed.
 
 ---
 
 <div align="center">
-Made with â¤ï¸ by <a href="https://github.com/XorDu">XorDu</a>
+Made with ❤️ by <a href="https://github.com/XorDu">XorDu</a>
 </div>
